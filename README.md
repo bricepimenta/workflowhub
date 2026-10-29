@@ -15,3 +15,7 @@ Create a GitHub repository and push this code as **incremental, honest commits**
 
 ## Known limitations / next improvements
 This is a coursework-scale starter, not a production deployment. Token stored in sessionStorage is vulnerable to XSS; production should use a stronger session/auth pattern. SQLite is suited for local demonstration, not clustered SaaS deployment. Pin dependencies and GitHub Actions by immutable digest for production; introduce linting, scans, tests, PostgreSQL, HTTPS, CSRF/CORS review, protected environments and deployment approvals. Frontend environment variables are compiled into build artifacts, so never put secrets into `VITE_` values. The frontend Docker build uses npm install because no lockfile has been generated; run `npm install` and commit `package-lock.json` then migrate to `npm ci` for reproducibility.
+
+## Recent Updates
+- Added task validation to prevent empty or whitespace-only titles
+- Improved data integrity with model-level validation
