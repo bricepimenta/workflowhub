@@ -1,0 +1,18 @@
+version: 2.1
+jobs:
+  docker-build:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Django backend
+          command: docker build -t workflowhub-backend:circleci ./backend
+      - run:
+          name: Build React frontend
+          command: docker build -t workflowhub-frontend:circleci ./frontend
+workflows:
+  build-images:
+    jobs:
+      - docker-build

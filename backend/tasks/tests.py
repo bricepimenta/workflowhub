@@ -1,0 +1,18 @@
+from django.test import TestCase
+from django.contrib.auth import get_user_model
+from rest_framework.test import APIClient
+class TaskApiTests(TestCase):
+ def setUp(self):
+  self.client=APIClient()
+  self.user=get_user_model().objects.create_user(username='tester',password='Testpass123!')
+  self.client.force_authenticate(user=self.user)
+ def test_crud_and_status(self):
+  r=self.client.post('/api/tasks/',{'title':'First task','status':'pending'},format='json'); self.assertEqual(r.status_code,201)
+  task_id=r.data['id']
+  self.assertEqual(self.client.get('/api/tasks/').status_code,200)
+  self.assertEqual(self.client.patch(f'/api/tasks/{task_id}/',{'status':'completed'},format='json').status_code,200)
+  self.assertEqual(self.client.delete(f'/api/tasks/{task_id}/').status_code,204)
+ def test_private_tasks(self):
+  other=get_user_model().objects.create_user(username='other',password='Testpass123!')
+  self.client.force_authenticate(user=other)
+  self.assertEqual(self.client.get('/api/tasks/').data,[])

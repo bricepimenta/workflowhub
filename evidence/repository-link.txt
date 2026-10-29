@@ -1,0 +1,2 @@
+GitHub repository URL: [INSERT ACTUAL URL]
+CircleCI project URL: [INSERT ACTUAL URL]
