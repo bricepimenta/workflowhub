@@ -1,5 +1,31 @@
 version: 2.1
 jobs:
+  test-backend:
+    docker:
+      - image: cimg/python:3.12
+    environment:
+      DJANGO_SECRET_KEY: ci-test-only-secret
+    steps:
+      - checkout
+      - run:
+          name: Install backend dependencies
+          command: pip install -r backend/requirements.txt
+      - run:
+          name: Run backend unit tests
+          command: python backend/manage.py test tasks -v 2
+  test-frontend:
+    docker:
+      - image: cimg/node:20.18
+    steps:
+      - checkout
+      - run:
+          name: Install frontend dependencies
+          working_directory: frontend
+          command: npm install
+      - run:
+          name: Run frontend unit tests
+          working_directory: frontend
+          command: npm test
   docker-build:
     docker:
       - image: cimg/base:stable
@@ -13,6 +39,8 @@ jobs:
           name: Build React frontend
           command: docker build -t workflowhub-frontend:circleci ./frontend
 workflows:
-  build-images:
+  test-and-build:
     jobs:
+      - test-backend
+      - test-frontend
       - docker-build
