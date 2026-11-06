@@ -16,3 +16,9 @@ class TaskApiTests(TestCase):
   other=get_user_model().objects.create_user(username='other',password='Testpass123!')
   self.client.force_authenticate(user=other)
   self.assertEqual(self.client.get('/api/tasks/').data,[])
+ def test_status_defaults_to_pending(self):
+  r=self.client.post('/api/tasks/',{'title':'No status given'},format='json'); self.assertEqual(r.status_code,201)
+  self.assertEqual(r.data['status'],'pending')
+ def test_create_with_chosen_status(self):
+  r=self.client.post('/api/tasks/',{'title':'Already started','status':'in_progress'},format='json'); self.assertEqual(r.status_code,201)
+  self.assertEqual(r.data['status'],'in_progress')
